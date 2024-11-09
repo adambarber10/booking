@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>קביעת תור לתספורת</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212; /* Black background */
+      color: #ffffff; /* White text */
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #ffffff; /* White header */
+      color: #121212; /* Dark text for contrast */
+      padding: 20px 10px;
+      text-align: center;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    nav ul li {
+      display: inline-block;
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      color: #121212;
+      text-decoration: none;
+      font-size: 1.2em;
+    }
+
+    section {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #333333; /* Dark Grey background for content */
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 800px;
+    }
+
+    h1, h2 {
+      color: #ffffff; /* White headings */
+    }
+
+    form label {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      color: #cccccc; /* Light grey labels */
+    }
+
+    form input, form select, form button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #444; /* Dark border color */
+      font-size: 1em;
+      background-color: #555; /* Slightly lighter grey input background */
+      color: #ffffff;
+    }
+
+    form input[type="tel"], form input[type="text"], form input[type="date"], form input[type="time"] {
+      max-width: 100%;
+    }
+
+    button {
+      background-color: #ffffff; /* White buttons */
+      color: #121212; /* Dark text for button contrast */
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 12px;
+    }
+
+    button:hover {
+      background-color: #f1f1f1; /* Light grey on hover */
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #ffffff;
+      color: #121212;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .calendar {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      justify-content: space-between;
+    }
+
+    .day {
+      width: calc(100% / 7 - 10px);
+      height: 150px;
+      border: 1px solid #444;
+      box-sizing: border-box;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+      margin-bottom: 15px;
+      background-color: #444;
+      border-radius: 8px;
+    }
+
+    .day span {
+      display: block;
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #ffffff; /* White for dates */
+    }
+
+    .appointments {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #1e90ff; /* Blue for appointments */
+    }
+
+    .appointment-item {
+      background-color: #666;
+      padding: 5px;
+      margin: 5px 0;
+      border-radius: 5px;
+      font-size: 0.9em;
+      color: white;
+    }
+
+    .appointment-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cancel-btn, .edit-btn {
+      background-color: #e60000; /* Red for cancel button */
+      color: white;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .edit-btn {
+      background-color: #ffcc00; /* Yellow for edit button */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      header {
+        padding: 15px;
+      }
+
+      nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      .calendar {
+        flex-direction: column;
+      }
+
+      .day {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      button {
+        font-size: 1.1em;
+        padding: 15px;
+      }
+
+      form input, form select, form button {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 style="color: #121212;">קביעת תור לתספורת</h1>
+  <nav>
+    <ul>
+      <li><a href="#book">קבע תור</a></li>
+      <li><a href="#admin-login">התחבר כמנהל</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="book">
+  <h2>קביעת תור</h2>
+  <form id="booking-form">
+    <label for="service">בחר שירות:</label>
+    <select id="service" name="service">
+      <option value="Haircut">תספורת</option>
+    </select>
+
+    <label for="date">בחר תאריך:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="time">בחר שעה:</label>
+    <input type="time" id="time" name="time" required>
+
+    <label for="name">שם:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="phone">מספר טלפון:</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <p><strong>מחיר: 30₪</strong></p>
+
+    <button type="submit">קבע תור</button>
+  </form>
+</section>
+
+<section id="admin-login">
+  <h2>התחבר כמנהל</h2>
+  <form id="login-form">
+    <label for="admin-code">הכנס קוד מנהל:</label>
+    <input type="password" id="admin-code" name="admin-code" required>
+    <button type="submit">התחבר</button>
+  </form>
+</section>
+
+<section id="appointments" style="display: none;">
+  <h2>לוח זמנים של תורים</h2>
+  <div id="calendar" class="calendar">
+    <!-- Calendar days will be generated here -->
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2024 מספרה של אדם. כל הזכויות שמורות.</p>
+</footer>
+
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script> <!-- EmailJS Script -->
+
+<script>
+  // Initialize EmailJS with your user ID (you get this from EmailJS dashboard)
+  emailjs.init("service_fz19ub5"); // Replace with your EmailJS user ID
+
+  // Store appointments in localStorage
+  function saveAppointment(appointment) {
+    let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    appointments.push(appointment);
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+  }
+
+  // Delete an appointment
+  function deleteAppointment(index) {
+    let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    appointments.splice(index, 1);
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    displayAppointments(); // Re-render appointments
+  }
+
+  // Edit an appointment (change date or time)
+  function editAppointment(index, newDate, newTime) {
+    let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    appointments[index].date = newDate;
+    appointments[index].time = newTime;
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    displayAppointments(); // Re-render appointments
+  }
+
+  // Display all appointments in the calendar view
+  function displayAppointments() {
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = ''; // Clear existing calendar content
+
+    // Get the current month and year
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+
+    // Days in current month
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+
+    // Create empty spaces for days before the first day of the month
+    let day = 1;
+    for (let i = 0; i < startingDay; i++) {
+      calendar.innerHTML += `<div class="day"></div>`;
+    }
+
+    // Add the days of the month
+    for (let i = startingDay; i < 7; i++) {
+      calendar.innerHTML += createDay(day++, appointments, month, year);
+    }
+
+    for (let i = day; i <= daysInMonth; i++) {
+      calendar.innerHTML += createDay(i, appointments, month, year);
+    }
+  }
+
+  // Helper function to create day boxes with appointments
+  function createDay(day, appointments, month, year) {
+    const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    const dayAppointments = appointments.filter(a => a.date === dateStr);
+    const appointmentItems = dayAppointments.map((app, index) => `
+      <div class="appointment-item">
+        ${app.time} - ${app.name} (${app.phone})
+        <div class="appointment-actions">
+          <button class="edit-btn" onclick="editAppointment(${index}, prompt('תאריך חדש:', '${app.date}'), prompt('שעה חדשה:', '${app.time}'))">ערוך</button>
+          <button class="cancel-btn" onclick="deleteAppointment(${index})">בטל</button>
+        </div>
+      </div>`).join('');
+    
+    return `
+      <div class="day">
+        <span>${day}</span>
+        <div class="appointments">${appointmentItems}</div>
+      </div>
+    `;
+  }
+
+  // Handle the booking form submission
+  document.getElementById("booking-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+
+    const appointment = { service, date, time, name, phone };
+    
+    // Save the appointment to localStorage
+    saveAppointment(appointment);
+
+    // Send email notification to admin
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+      service,
+      date,
+      time,
+      name,
+      phone
+    }).then(function(response) {
+      console.log("Success", response);
+      alert(`הזמנתך אושרה!\nשירות: ${service}\nתאריך: ${date}\nשעה: ${time}\nשם: ${name}\nטלפון: ${phone}`);
+    }, function(error) {
+      console.log("Failed", error);
+      alert("הייתה בעיה לשלוח את הודעת האימייל. אנא נסה שנית.");
+    });
+  });
+
+  // Handle the admin login form submission
+  document.getElementById("login-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const adminCode = document.getElementById("admin-code").value;
+
+    // Check if the admin code is correct
+    if (adminCode === "ADAM123") {
+        // Show the appointment calendar
+        document.getElementById("appointments").style.display = 'block';
+        displayAppointments();
+        alert("התחברת בהצלחה! ברוך הבא לפאנל המנהל.");
+    } else {
+        alert("קוד מנהל לא תקין. אנא נסה שוב.");
+    }
+  });
+</script>
+</body>
+</html>
