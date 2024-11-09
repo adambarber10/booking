@@ -102,30 +102,20 @@
     }
 
     .calendar {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
       margin-top: 20px;
-      justify-content: space-between;
     }
 
     .day {
-      width: calc(100% / 7 - 10px);
-      height: 150px;
-      border: 1px solid #444;
-      box-sizing: border-box;
+      background-color: #444;
+      border-radius: 8px;
       padding: 10px;
       text-align: center;
       position: relative;
-      margin-bottom: 15px;
-      background-color: #444;
-      border-radius: 8px;
-    }
-
-    .day span {
-      display: block;
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #ffffff; /* White for dates */
+      color: white;
+      font-size: 1.2em;
     }
 
     .appointments {
@@ -178,21 +168,46 @@
       }
 
       .calendar {
-        flex-direction: column;
+        display: block;
+        margin-top: 20px;
       }
 
       .day {
-        width: 100%;
         margin-bottom: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        font-size: 1.1em;
+      }
+
+      .day span {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .appointments {
+        font-size: 0.9em;
+      }
+
+      .appointment-item {
+        font-size: 0.8em;
+        padding: 6px;
+      }
+
+      .appointment-actions {
+        flex-direction: column;
+      }
+
+      .edit-btn, .cancel-btn {
+        width: 100%;
+        margin: 5px 0;
+        font-size: 1em;
       }
 
       button {
         font-size: 1.1em;
         padding: 15px;
-      }
-
-      form input, form select, form button {
-        font-size: 1em;
       }
     }
   </style>
@@ -282,30 +297,20 @@
     displayAppointments(); // Re-render appointments
   }
 
-  // Display all appointments in the calendar view
+  // Display appointments in the calendar view
   function displayAppointments() {
-    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
     const calendar = document.getElementById('calendar');
-    calendar.innerHTML = ''; // Clear existing calendar content
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    calendar.innerHTML = ''; // Clear current calendar
 
-    // Get the current month and year
-    const now = new Date();
-    const month = now.getMonth();
-    const year = now.getFullYear();
-
-    // Days in current month
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    
-    for (let i = 1; i <= daysInMonth; i++) {
+    for (let i = 1; i <= 31; i++) {
       const day = document.createElement('div');
       day.classList.add('day');
       day.innerHTML = `<span>${i}</span>`;
 
       const dayAppointments = appointments.filter(app => {
         const appDate = new Date(app.date);
-        return appDate.getDate() === i && appDate.getMonth() === month && appDate.getFullYear() === year;
+        return appDate.getDate() === i;
       });
 
       if (dayAppointments.length > 0) {
