@@ -247,7 +247,9 @@
     <input type="date" id="date" name="date" required>
 
     <label for="time">בחר שעה:</label>
-    <select id="time" name="time" required></select>
+    <select id="time" name="time" required>
+      <option value="">בחר שעה</option>
+    </select>
 
     <label for="name">שם:</label>
     <input type="text" id="name" name="name" required>
@@ -306,11 +308,44 @@
       document.getElementById("booking-form").reset();
     }).catch(error => {
       console.error("Error adding document: ", error);
-      alert("אירעה שגיאה בהגדרת התור"); // Error message
     });
   });
 
-  // Fetch and display appointments
+  // Fetch and display available times based on the selected date
+  document.getElementById("date").addEventListener("change", function() {
+    const selectedDate = this.value;
+    const timeSelect = document.getElementById("time");
+    
+    // Clear previous time options
+    timeSelect.innerHTML = "<option value=''>בחר שעה</option>";
+
+    // Fetch existing appointments for the selected date
+    db.collection("appointments")
+      .where("date", "==", selectedDate)
+      .get()
+      .then(snapshot => {
+        const bookedTimes = snapshot.docs.map(doc => doc.data().time);
+
+        // Define available times for the day
+        const availableTimes = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+
+        availableTimes.forEach(time => {
+          if (!bookedTimes.includes(time)) {
+            const option = document.createElement("option");
+            option.value = time;
+            option.textContent = time;
+            timeSelect.appendChild(option);
+          }
+        });
+      });
+  });
+
+  // Call fetchAppointments on page load to display existing appointments
+  window.onload = function() {
+    fetchAppointments();
+  }
+
+  // Fetch and display appointments from Firestore
   function fetchAppointments() {
     const appointmentsRef = db.collection("appointments");
     appointmentsRef.get().then(snapshot => {
@@ -319,9 +354,11 @@
     });
   }
 
+  // Display appointments in a calendar layout
   function displayAppointments(appointments) {
     const calendar = document.getElementById("calendar");
     calendar.innerHTML = ""; // Clear existing calendar content
+
     appointments.forEach(appointment => {
       const dayElement = document.createElement("div");
       dayElement.classList.add("day");
@@ -342,9 +379,6 @@
       calendar.appendChild(dayElement);
     });
   }
-
-  // Call fetchAppointments on page load to display existing appointments
-  window.onload = fetchAppointments;
 </script>
 
 </body>
