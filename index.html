@@ -303,10 +303,12 @@
       time: time,
       name: name,
       phone: phone
-    }).then(() => {
-      alert("תור נקבע בהצלחה!"); // Success message
-      document.getElementById("booking-form").reset();
-    }).catch(error => {
+    })
+    .then(() => {
+      alert("תור נקבע בהצלחה!");
+      fetchAppointments(); // Refresh the calendar
+    })
+    .catch((error) => {
       console.error("Error adding document: ", error);
     });
   });
@@ -329,6 +331,7 @@
         // Define available times for the day
         const availableTimes = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
 
+        // Filter out booked times
         availableTimes.forEach(time => {
           if (!bookedTimes.includes(time)) {
             const option = document.createElement("option");
@@ -339,11 +342,6 @@
         });
       });
   });
-
-  // Call fetchAppointments on page load to display existing appointments
-  window.onload = function() {
-    fetchAppointments();
-  }
 
   // Fetch and display appointments from Firestore
   function fetchAppointments() {
