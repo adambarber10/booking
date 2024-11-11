@@ -5,8 +5,223 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>קביעת תור לתספורת</title>
   <style>
-    /* Your existing CSS code here */
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #ffffff;
+      color: #121212;
+      padding: 20px 10px;
+      text-align: center;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    nav ul li {
+      display: inline-block;
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      color: #121212;
+      text-decoration: none;
+      font-size: 1.2em;
+    }
+
+    section {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #333333;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 800px;
+    }
+
+    h1, h2 {
+      color: #ffffff;
+    }
+
+    form label {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      color: #cccccc;
+    }
+
+    form input, form select, form button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      font-size: 1em;
+      background-color: #555;
+      color: #ffffff;
+    }
+
+    button {
+      background-color: #ffffff;
+      color: #121212;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 12px;
+    }
+
+    button:hover {
+      background-color: #f1f1f1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #ffffff;
+      color: #121212;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .day {
+      background-color: #444;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+      color: white;
+      font-size: 1.2em;
+    }
+
+    .appointments {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #1e90ff;
+    }
+
+    .appointment-item {
+      background-color: #666;
+      padding: 5px;
+      margin: 5px 0;
+      border-radius: 5px;
+      font-size: 0.9em;
+      color: white;
+    }
+
+    .appointment-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cancel-btn, .edit-btn {
+      background-color: #e60000;
+      color: white;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .edit-btn {
+      background-color: #ffcc00;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 15px;
+      }
+
+      nav ul li {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      .calendar {
+        display: block;
+        margin-top: 20px;
+      }
+
+      .day {
+        margin-bottom: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        font-size: 1.1em;
+      }
+
+      .appointments {
+        font-size: 0.9em;
+      }
+
+      .appointment-item {
+        font-size: 0.8em;
+        padding: 6px;
+      }
+
+      .appointment-actions {
+        flex-direction: column;
+      }
+
+      .edit-btn, .cancel-btn {
+        width: 100%;
+        margin: 5px 0;
+        font-size: 1em;
+      }
+
+      button {
+        font-size: 1.1em;
+        padding: 15px;
+      }
+    }
   </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcgirLotTmpzk10DQhQq6LQ4cuhhU6lA4",
+      authDomain: "adam-website-54055.firebaseapp.com",
+      projectId: "adam-website-54055",
+      storageBucket: "adam-website-54055.appspot.com",
+      messagingSenderId: "749160565081",
+      appId: "1:749160565081:web:d55937c897216161da6448"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
+  </script>
+
 </head>
 <body>
 
@@ -57,143 +272,80 @@
 
 <section id="appointments" style="display: none;">
   <h2>לוח זמנים של תורים</h2>
-  <div id="calendar" class="calendar">
-    <!-- Calendar days will be generated here -->
-  </div>
+  <div id="calendar" class="calendar"></div>
 </section>
 
 <footer>
   <p>&copy; 2024 מספרה של אדם. כל הזכויות שמורות.</p>
 </footer>
 
-<!-- Firebase SDKs (latest version) -->
-<script type="module">
-  // Import Firebase SDK
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyAcgirLotTmpzk10DQhQq6LQ4cuhhU6lA4",
-    authDomain: "adam-website-54055.firebaseapp.com",
-    projectId: "adam-website-54055",
-    storageBucket: "adam-website-54055.appspot.com",
-    messagingSenderId: "749160565081",
-    appId: "1:749160565081:web:d55937c897216161da6448"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Save appointment to Firestore
-  async function saveAppointment(appointment) {
-    try {
-      await addDoc(collection(db, "appointments"), appointment);
-      alert("הזמנתך אושרה!");
-      displayAppointments();
-    } catch (error) {
-      console.error("Error saving appointment: ", error);
-    }
-  }
-
-  // Display appointments from Firestore
-  async function displayAppointments() {
-    const calendar = document.getElementById("calendar");
-    calendar.innerHTML = ""; // Clear the calendar
-
-    try {
-      const querySnapshot = await getDocs(collection(db, "appointments"));
-      querySnapshot.forEach((doc) => {
-        const appointment = doc.data();
-        const date = new Date(appointment.date);
-        const day = date.getDate();
-
-        let dayElement = document.querySelector(`.day[data-day="${day}"]`);
-        if (!dayElement) {
-          dayElement = document.createElement("div");
-          dayElement.classList.add("day");
-          dayElement.setAttribute("data-day", day);
-          dayElement.innerHTML = `<span>${day}</span>`;
-          calendar.appendChild(dayElement);
-        }
-
-        const appointmentItem = document.createElement("div");
-        appointmentItem.classList.add("appointment-item");
-        appointmentItem.textContent = `${appointment.time} - ${appointment.name}`;
-        dayElement.appendChild(appointmentItem);
-      });
-    } catch (error) {
-      console.error("Error displaying appointments: ", error);
-    }
-  }
-
-  // Event listener for the booking form
-  document.getElementById('booking-form').addEventListener('submit', function(event) {
+<script>
+  // Handle booking form submission
+  document.getElementById("booking-form").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const service = document.getElementById('service').value;
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
+    // Collect form data
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
 
-    const appointment = { service, date, time, name, phone };
+    // Reference to Firestore collection
+    const appointmentsRef = db.collection("appointments");
 
-    // Save the appointment to Firestore
-    saveAppointment(appointment);
-  });
-
-  // Event listener for the login form
-  document.getElementById('login-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const adminCode = document.getElementById('admin-code').value;
-    if (adminCode === '582036') { // Replace with your actual admin code
-      document.getElementById('appointments').style.display = 'block';
-      displayAppointments(); // Show the calendar with appointments
-    } else {
-      alert('קוד שגוי');
-    }
-  });
-
-  // Function to populate the available time slots based on the selected date
-  document.getElementById("date").addEventListener("change", function() {
-    const dateInput = document.getElementById("date").value;
-    const date = new Date(dateInput);
-    const dayOfWeek = date.getDay(); // 0 (Sunday) to 6 (Saturday)
-
-    const timeInput = document.getElementById("time");
-    timeInput.innerHTML = ''; // Clear current time options
-
-    const timeSlots = getAvailableTimeSlots(dayOfWeek);
-    timeSlots.forEach(time => {
-      const option = document.createElement("option");
-      option.value = time;
-      option.textContent = time;
-      timeInput.appendChild(option);
+    // Add a new document with form data
+    appointmentsRef.add({
+      service: service,
+      date: date,
+      time: time,
+      name: name,
+      phone: phone
+    }).then(() => {
+      alert("תור נקבע בהצלחה!"); // Success message
+      document.getElementById("booking-form").reset();
+    }).catch(error => {
+      console.error("Error adding document: ", error);
+      alert("אירעה שגיאה בהגדרת התור"); // Error message
     });
   });
 
-  // Function to return available time slots based on the day of the week
-  function getAvailableTimeSlots(dayOfWeek) {
-    const slots = {
-      0: ["15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"], // Sunday
-      1: ["16:30", "17:00", "17:30"], // Monday
-      2: ["14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"], // Tuesday
-      3: ["15:30", "16:00", "16:30", "17:00", "17:30", "18:00"], // Wednesday
-      4: ["15:30", "16:00", "16:30", "17:00", "17:30"], // Thursday
-      5: [], // Friday - No slots
-      6: ["10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"] // Saturday
-    };
-    return slots[dayOfWeek] || [];
+  // Fetch and display appointments
+  function fetchAppointments() {
+    const appointmentsRef = db.collection("appointments");
+    appointmentsRef.get().then(snapshot => {
+      const appointments = snapshot.docs.map(doc => doc.data());
+      displayAppointments(appointments);
+    });
   }
 
-  // Call displayAppointments to populate the calendar on initial page load
-  displayAppointments();
-</script>
+  function displayAppointments(appointments) {
+    const calendar = document.getElementById("calendar");
+    calendar.innerHTML = ""; // Clear existing calendar content
+    appointments.forEach(appointment => {
+      const dayElement = document.createElement("div");
+      dayElement.classList.add("day");
 
-</body>
-</html>
+      const date = new Date(appointment.date);
+      const dayOfMonth = date.getDate();
+      dayElement.innerHTML = `<strong>${dayOfMonth}</strong><div class="appointments">`;
+
+      const appointmentsForDay = appointments.filter(a => new Date(a.date).getDate() === dayOfMonth);
+      appointmentsForDay.forEach(app => {
+        dayElement.innerHTML += `
+          <div class="appointment-item">
+            ${app.time} - ${app.name} (${app.phone})
+          </div>
+        `;
+      });
+
+      calendar.appendChild(dayElement);
+    });
+  }
+
+  // Call fetchAppointments on page load to display existing appointments
+  window.onload = fetchAppointments;
+</script>
 
 </body>
 </html>
