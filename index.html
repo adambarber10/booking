@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>קביעת תור לתספורת</title>
   <style>
-    /* Your existing CSS code remains the same */
+    /* Your existing CSS code here */
   </style>
 </head>
 <body>
@@ -32,7 +32,7 @@
     <input type="date" id="date" name="date" required>
 
     <label for="time">בחר שעה:</label>
-    <select id="time" name="time" ></select>
+    <select id="time" name="time" required></select>
 
     <label for="name">שם:</label>
     <input type="text" id="name" name="name" required>
@@ -66,11 +66,12 @@
   <p>&copy; 2024 מספרה של אדם. כל הזכויות שמורות.</p>
 </footer>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+<!-- Firebase SDKs (latest version) -->
+<script type="module">
+  // Import Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-<script>
   // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAcgirLotTmpzk10DQhQq6LQ4cuhhU6lA4",
@@ -82,53 +83,49 @@
   };
 
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
   // Save appointment to Firestore
-  function saveAppointment(appointment) {
-    db.collection("appointments")
-      .add(appointment)
-      .then(() => {
-        alert("הזמנתך אושרה!");
-        displayAppointments();
-      })
-      .catch((error) => {
-        console.error("Error saving appointment: ", error);
-      });
+  async function saveAppointment(appointment) {
+    try {
+      await addDoc(collection(db, "appointments"), appointment);
+      alert("הזמנתך אושרה!");
+      displayAppointments();
+    } catch (error) {
+      console.error("Error saving appointment: ", error);
+    }
   }
 
   // Display appointments from Firestore
-  function displayAppointments() {
+  async function displayAppointments() {
     const calendar = document.getElementById("calendar");
     calendar.innerHTML = ""; // Clear the calendar
 
-    db.collection("appointments")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const appointment = doc.data();
-          const date = new Date(appointment.date);
-          const day = date.getDate();
+    try {
+      const querySnapshot = await getDocs(collection(db, "appointments"));
+      querySnapshot.forEach((doc) => {
+        const appointment = doc.data();
+        const date = new Date(appointment.date);
+        const day = date.getDate();
 
-          let dayElement = document.querySelector(`.day[data-day="${day}"]`);
-          if (!dayElement) {
-            dayElement = document.createElement("div");
-            dayElement.classList.add("day");
-            dayElement.setAttribute("data-day", day);
-            dayElement.innerHTML = `<span>${day}</span>`;
-            calendar.appendChild(dayElement);
-          }
+        let dayElement = document.querySelector(`.day[data-day="${day}"]`);
+        if (!dayElement) {
+          dayElement = document.createElement("div");
+          dayElement.classList.add("day");
+          dayElement.setAttribute("data-day", day);
+          dayElement.innerHTML = `<span>${day}</span>`;
+          calendar.appendChild(dayElement);
+        }
 
-          const appointmentItem = document.createElement("div");
-          appointmentItem.classList.add("appointment-item");
-          appointmentItem.textContent = `${appointment.time} - ${appointment.name}`;
-          dayElement.appendChild(appointmentItem);
-        });
-      })
-      .catch((error) => {
-        console.error("Error displaying appointments: ", error);
+        const appointmentItem = document.createElement("div");
+        appointmentItem.classList.add("appointment-item");
+        appointmentItem.textContent = `${appointment.time} - ${appointment.name}`;
+        dayElement.appendChild(appointmentItem);
       });
+    } catch (error) {
+      console.error("Error displaying appointments: ", error);
+    }
   }
 
   // Event listener for the booking form
@@ -194,6 +191,9 @@
   // Call displayAppointments to populate the calendar on initial page load
   displayAppointments();
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
